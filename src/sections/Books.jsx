@@ -2,94 +2,109 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient.js'
 
 const SEED_BOOKS = [
-  {title:"El mundo de ayer",author:"Stefan Zweig",year:2023,rating:5,genre:"Biografía"},
-  {title:"Pensar rápido, pensar despacio",author:"Daniel Kahneman",year:2023,rating:5,genre:"Economía conductual"},
-  {title:"Antifrágil",author:"Nassim Taleb",year:2023,rating:5,genre:"Filosofía"},
-  {title:"Los pilares de la Tierra",author:"Ken Follett",year:2023,rating:5,genre:"Ficción histórica"},
-  {title:"El nombre de la rosa",author:"Umberto Eco",year:2023,rating:5,genre:"Ficción histórica"},
-  {title:"Sapiens",author:"Yuval Noah Harari",year:2023,rating:4,genre:"Historia"},
-  {title:"El inversor inteligente",author:"Benjamin Graham",year:2023,rating:5,genre:"Inversión"},
-  {title:"La psicología del dinero",author:"Morgan Housel",year:2023,rating:5,genre:"Economía conductual"},
-  {title:"Estoicismo",author:"Epicteto",year:2023,rating:4,genre:"Filosofía"},
-  {title:"Meditaciones",author:"Marco Aurelio",year:2023,rating:5,genre:"Filosofía"},
-  {title:"Africanus: El hijo del cónsul",author:"Santiago Posteguillo",year:2023,rating:5,genre:"Ficción histórica"},
-  {title:"Las legiones malditas",author:"Santiago Posteguillo",year:2023,rating:5,genre:"Ficción histórica"},
-  {title:"La traición de Roma",author:"Santiago Posteguillo",year:2023,rating:5,genre:"Ficción histórica"},
-  {title:"Yo, Julia",author:"Santiago Posteguillo",year:2023,rating:4,genre:"Ficción histórica"},
-  {title:"El capitán Alatriste",author:"Arturo Pérez-Reverte",year:2023,rating:4,genre:"Ficción histórica"},
-  {title:"Limpieza de sangre",author:"Arturo Pérez-Reverte",year:2023,rating:4,genre:"Ficción histórica"},
-  {title:"El sol de Breda",author:"Arturo Pérez-Reverte",year:2023,rating:4,genre:"Ficción histórica"},
-  {title:"El oro del rey",author:"Arturo Pérez-Reverte",year:2023,rating:4,genre:"Ficción histórica"},
-  {title:"El caballero del jubón amarillo",author:"Arturo Pérez-Reverte",year:2024,rating:4,genre:"Ficción histórica"},
-  {title:"Corsarios de Levante",author:"Arturo Pérez-Reverte",year:2024,rating:4,genre:"Ficción histórica"},
-  {title:"El puente de los Asesinos",author:"Arturo Pérez-Reverte",year:2024,rating:4,genre:"Ficción histórica"},
-  {title:"El maestro de esgrima",author:"Arturo Pérez-Reverte",year:2024,rating:4,genre:"Ficción histórica"},
-  {title:"La tabla de Flandes",author:"Arturo Pérez-Reverte",year:2024,rating:4,genre:"Ficción"},
-  {title:"El club Dumas",author:"Arturo Pérez-Reverte",year:2024,rating:4,genre:"Ficción"},
-  {title:"Una carta de España",author:"Stefan Zweig",year:2024,rating:4,genre:"Biografía"},
-  {title:"Novela de ajedrez",author:"Stefan Zweig",year:2024,rating:5,genre:"Ficción"},
-  {title:"Carta de una desconocida",author:"Stefan Zweig",year:2024,rating:4,genre:"Ficción"},
-  {title:"El jugador",author:"Fiódor Dostoyevski",year:2024,rating:4,genre:"Clásicos"},
-  {title:"Crimen y castigo",author:"Fiódor Dostoyevski",year:2024,rating:5,genre:"Clásicos"},
-  {title:"El idiota",author:"Fiódor Dostoyevski",year:2024,rating:4,genre:"Clásicos"},
-  {title:"El proceso",author:"Franz Kafka",year:2024,rating:4,genre:"Clásicos"},
-  {title:"La metamorfosis",author:"Franz Kafka",year:2024,rating:4,genre:"Clásicos"},
-  {title:"1984",author:"George Orwell",year:2024,rating:5,genre:"Ficción"},
-  {title:"Rebelión en la granja",author:"George Orwell",year:2024,rating:4,genre:"Ficción"},
-  {title:"Un mundo feliz",author:"Aldous Huxley",year:2024,rating:4,genre:"Ficción"},
-  {title:"El gran Gatsby",author:"F. Scott Fitzgerald",year:2024,rating:4,genre:"Clásicos"},
-  {title:"El viejo y el mar",author:"Ernest Hemingway",year:2024,rating:4,genre:"Clásicos"},
-  {title:"Por quién doblan las campanas",author:"Ernest Hemingway",year:2024,rating:4,genre:"Clásicos"},
-  {title:"El lobo estepario",author:"Hermann Hesse",year:2024,rating:4,genre:"Clásicos"},
-  {title:"Siddhartha",author:"Hermann Hesse",year:2024,rating:4,genre:"Filosofía"},
-  {title:"Demian",author:"Hermann Hesse",year:2024,rating:4,genre:"Clásicos"},
-  {title:"El alquimista",author:"Paulo Coelho",year:2024,rating:3,genre:"Ficción"},
-  {title:"Padre rico, padre pobre",author:"Robert Kiyosaki",year:2024,rating:3,genre:"Inversión"},
-  {title:"El hombre más rico de Babilonia",author:"George Clason",year:2024,rating:4,genre:"Inversión"},
-  {title:"Roma soy yo",author:"Santiago Posteguillo",year:2024,rating:5,genre:"Ficción histórica"},
-  {title:"La noche en que Frankenstein leyó el Quijote",author:"Santiago Posteguillo",year:2024,rating:4,genre:"Ensayo"},
-  {title:"El médico",author:"Noah Gordon",year:2024,rating:5,genre:"Ficción histórica"},
-  {title:"El rabino",author:"Noah Gordon",year:2024,rating:4,genre:"Ficción histórica"},
-  {title:"Shogun",author:"James Clavell",year:2024,rating:5,genre:"Ficción histórica"},
-  {title:"El señor de los anillos: La comunidad del anillo",author:"J.R.R. Tolkien",year:2024,rating:5,genre:"Fantasía"},
-  {title:"El señor de los anillos: Las dos torres",author:"J.R.R. Tolkien",year:2024,rating:5,genre:"Fantasía"},
-  {title:"El señor de los anillos: El retorno del rey",author:"J.R.R. Tolkien",year:2024,rating:5,genre:"Fantasía"},
-  {title:"El hobbit",author:"J.R.R. Tolkien",year:2024,rating:4,genre:"Fantasía"},
-  {title:"Dune",author:"Frank Herbert",year:2024,rating:5,genre:"Ciencia ficción"},
-  {title:"Dune Mesías",author:"Frank Herbert",year:2024,rating:4,genre:"Ciencia ficción"},
-  {title:"Los hijos de Dune",author:"Frank Herbert",year:2025,rating:4,genre:"Ciencia ficción"},
-  {title:"Guns, Germs and Steel",author:"Jared Diamond",year:2025,rating:4,genre:"Historia"},
-  {title:"El hombre en busca de sentido",author:"Viktor Frankl",year:2025,rating:5,genre:"Filosofía"},
-  {title:"Alejandro Magno",author:"Robin Lane Fox",year:2025,rating:4,genre:"Biografía"},
-  {title:"Julio César",author:"Adrian Goldsworthy",year:2025,rating:5,genre:"Biografía"},
-  {title:"Augusto",author:"Adrian Goldsworthy",year:2025,rating:5,genre:"Biografía"},
-  {title:"El arte de la guerra",author:"Sun Tzu",year:2025,rating:4,genre:"Filosofía"},
-  {title:"El príncipe",author:"Nicolás Maquiavelo",year:2025,rating:4,genre:"Filosofía"},
-  {title:"El cisne negro",author:"Nassim Taleb",year:2025,rating:5,genre:"Filosofía"},
-  {title:"Engañado por el azar",author:"Nassim Taleb",year:2025,rating:4,genre:"Economía conductual"},
-  {title:"El lecho de Procusto",author:"Nassim Taleb",year:2025,rating:4,genre:"Filosofía"},
-  {title:"¿Qué nos jugamos?",author:"Nassim Taleb",year:2025,rating:4,genre:"Filosofía"},
-  {title:"Common Stocks and Uncommon Profits",author:"Philip Fisher",year:2025,rating:5,genre:"Inversión"},
-  {title:"One Up On Wall Street",author:"Peter Lynch",year:2025,rating:5,genre:"Inversión"},
-  {title:"Beating the Street",author:"Peter Lynch",year:2025,rating:4,genre:"Inversión"},
-  {title:"The Warren Buffett Way",author:"Robert Hagstrom",year:2025,rating:4,genre:"Inversión"},
-  {title:"Security Analysis",author:"Benjamin Graham & David Dodd",year:2025,rating:4,genre:"Inversión"},
-  {title:"La Odisea",author:"Homero",year:2025,rating:5,genre:"Clásicos"},
-  {title:"La Ilíada",author:"Homero",year:2025,rating:5,genre:"Clásicos"},
-  {title:"Las vidas de los doce césares",author:"Suetonio",year:2025,rating:4,genre:"Historia"},
-  {title:"El conde de Montecristo",author:"Alexandre Dumas",year:2025,rating:5,genre:"Clásicos"},
-  {title:"Los tres mosqueteros",author:"Alexandre Dumas",year:2025,rating:4,genre:"Clásicos"},
-  {title:"Nerón. El dominio del mundo",author:"Santiago Posteguillo",year:2026,rating:4,genre:"Ficción histórica"},
-  {title:"La legión perdida",author:"Santiago Posteguillo",year:2026,rating:4,genre:"Ficción histórica"},
-  {title:"Thinking in Bets",author:"Annie Duke",year:2026,rating:4,genre:"Economía conductual"},
-  {title:"The Outsiders",author:"William Thorndike",year:2026,rating:5,genre:"Inversión"},
-  {title:"Poor Charlie's Almanack",author:"Charlie Munger",year:2026,rating:5,genre:"Inversión"},
-  {title:"Gallia. La guerra de las Galias",author:"Santiago Posteguillo",year:2026,rating:4,genre:"Ficción histórica"},
-  {title:"El poder del ahora",author:"Eckhart Tolle",year:2026,rating:3,genre:"Filosofía"},
+  {title:"El infinito en un junco",author:"Irene Vallejo",genre:"Ensayo",year:2023,rating:8.0},
+  {title:"La piel del tambor",author:"Arturo Pérez-Reverte",genre:"Novela",year:2023,rating:7.0},
+  {title:"Rebelión en la granja",author:"George Orwell",genre:"Distopía",year:2023,rating:8.2},
+  {title:"Los peligros de la moralidad",author:"Pablo Malo",genre:"Filosofía",year:2023,rating:7.0},
+  {title:"La bibliotecaria de Auschwitz",author:"Dita Kraus",genre:"Biografía",year:2023,rating:5.0},
+  {title:"Crónica de una muerte anunciada",author:"Gabriel García Márquez",genre:"Novela",year:2023,rating:7.2},
+  {title:"Factfulness",author:"Hans Rosling",genre:"Ensayo",year:2023,rating:8.0},
+  {title:"El pintor de batallas",author:"Arturo Pérez-Reverte",genre:"Novela",year:2023,rating:8.0},
+  {title:"El mundo de ayer",author:"Stefan Zweig",genre:"Biografía",year:2023,rating:9.5},
+  {title:"Mensajes de un mundo olvidado",author:"Stefan Zweig",genre:"Artículos",year:2023,rating:7.5},
+  {title:"¿Por qué dormimos?",author:"Matthew Walker",genre:"Salud",year:2023,rating:8.5},
+  {title:"Seis piezas fáciles",author:"Richard P. Feynman",genre:"Ciencia",year:2023,rating:6.0},
+  {title:"El camino",author:"Miguel Delibes",genre:"Clásico",year:2023,rating:8.0},
+  {title:"How to Live",author:"Derek Sivers",genre:"Filosofía",year:2023,rating:7.5},
+  {title:"Cuatro mil semanas",author:"Oliver Burkeman",genre:"Filosofía",year:2023,rating:8.0},
+  {title:"El extranjero",author:"Albert Camus",genre:"Clásico",year:2023,rating:7.5},
+  {title:"La conjura de los necios",author:"John Kennedy Toole",genre:"Clásico",year:2023,rating:6.0},
+  {title:"Pensar en sistemas",author:"Donella Meadows",genre:"Ensayo",year:2023,rating:8.5},
+  {title:"Revolución",author:"Arturo Pérez-Reverte",genre:"Novela",year:2023,rating:8.75},
+  {title:"Los girasoles ciegos",author:"Alberto Méndez",genre:"Novela",year:2023,rating:8.0},
+  {title:"The Outsiders",author:"William Thorndike",genre:"Inversión",year:2023,rating:8.0},
+  {title:"El derecho a disentir",author:"Mauricio Wiesenthal",genre:"Memorias",year:2023,rating:7.0},
+  {title:"Nido de Piratas",author:"Jesús Fernández Úbeda",genre:"Periodismo",year:2023,rating:5.6},
+  {title:"Prohibido Nacer",author:"Trevor Noah",genre:"Biografía",year:2023,rating:8.0},
+  {title:"Magallanes",author:"Stefan Zweig",genre:"Biografía",year:2023,rating:9.0},
+  {title:"Situación límite",author:"Joseph Conrad",genre:"Novela",year:2023,rating:5.8},
+  {title:"Doing Good Better",author:"William Macaskill",genre:"Ensayo",year:2023,rating:8.5},
+  {title:"Behavioural Economics",author:"David Orden",genre:"Psicología",year:2023,rating:6.3},
+  {title:"Tu dinero y tu cerebro",author:"Jason Zweig",genre:"Inversión",year:2023,rating:8.0},
+  {title:"El problema final",author:"Arturo Pérez-Reverte",genre:"Novela policiaca",year:2023,rating:8.0},
+  {title:"Africanus",author:"Santiago Posteguillo",genre:"Novela histórica",year:2023,rating:8.5},
+  {title:"Ruido",author:"Daniel Kahneman",genre:"Psicología",year:2023,rating:6.0},
+  {title:"Invicto",author:"Marcos Vázquez",genre:"Estoicismo",year:2023,rating:8.0},
+  {title:"Hijos de la adversidad",author:"Antonio Valenzuela",genre:"Salud",year:2023,rating:9.0},
+  {title:"Fouché",author:"Stefan Zweig",genre:"Biografía",year:2023,rating:9.0},
+  {title:"Pensar rápido, pensar despacio",author:"Daniel Kahneman",genre:"Psicología",year:2023,rating:9.3},
+  {title:"La psicología del dinero",author:"Morgan Housel",genre:"Inversión",year:2023,rating:8.0},
+  {title:"Las legiones malditas",author:"Santiago Posteguillo",genre:"Novela histórica",year:2023,rating:8.5},
+  {title:"Cómo ganar amigos e influir sobre las personas",author:"Dale Carnegie",genre:"Psicología",year:2023,rating:9.5},
+  {title:"Los ingratos",author:"Pedro Simón",genre:"Novela",year:2023,rating:9.0},
+  {title:"A propósito de nada",author:"Woody Allen",genre:"Autobiografía",year:2023,rating:8.0},
+  {title:"Aventuras de Sherlock Holmes",author:"Arthur Conan Doyle",genre:"Novela policiaca",year:2024,rating:7.0},
+  {title:"O apelo da Tribu",author:"Mario Vargas Llosa",genre:"Política",year:2024,rating:7.0},
+  {title:"La Traición de Roma",author:"Santiago Posteguillo",genre:"Novela histórica",year:2024,rating:8.2},
+  {title:"El Almanaque de Naval Ravikant",author:"Eric Jorgenson",genre:"Filosofía",year:2024,rating:9.0},
+  {title:"La sombra del águila",author:"Arturo Pérez-Reverte",genre:"Novela",year:2024,rating:6.0},
+  {title:"Railroader",author:"Howard Green",genre:"Biografía",year:2024,rating:7.0},
+  {title:"Honrarás a tu padre",author:"Gay Talese",genre:"Ensayo",year:2024,rating:9.3},
+  {title:"¿Dónde vamos a bailar esta noche?",author:"Javier Aznar",genre:"Artículos",year:2024,rating:9.0},
+  {title:"Yo fui médico del diablo",author:"K. Von Vereiter",genre:"Novela histórica",year:2024,rating:6.5},
+  {title:"Vive más",author:"Marcos Vázquez",genre:"Salud",year:2024,rating:8.0},
+  {title:"A sangre fría",author:"Truman Capote",genre:"True Crime",year:2024,rating:8.0},
+  {title:"Rendimientos del capital",author:"Edward Chancellor",genre:"Inversión",year:2024,rating:7.0},
+  {title:"El asesinato de Sócrates",author:"Marcos Chicot",genre:"Novela histórica",year:2024,rating:9.0},
+  {title:"El húsar",author:"Arturo Pérez-Reverte",genre:"Novela",year:2024,rating:7.0},
+  {title:"Trece Runas",author:"Michael Penkofer",genre:"Novela",year:2024,rating:6.75},
+  {title:"Antifragil",author:"Nassim Nicholas Taleb",genre:"Ensayo",year:2024,rating:9.3},
+  {title:"Los Vencejos",author:"Fernando Aramburu",genre:"Novela",year:2024,rating:7.0},
+  {title:"Bartleby y yo",author:"Gay Talese",genre:"Crónicas",year:2024,rating:6.5},
+  {title:"Robinson Crusoe",author:"Daniel Defoe",genre:"Clásico",year:2024,rating:9.5},
+  {title:"Rompe la Barrera del No",author:"Chris Voss",genre:"Psicología",year:2024,rating:8.0},
+  {title:"Roma soy yo",author:"Santiago Posteguillo",genre:"Novela histórica",year:2024,rating:8.5},
+  {title:"Brooklyn Follies",author:"Paul Auster",genre:"Novela",year:2024,rating:7.75},
+  {title:"Lo que el viento se llevó",author:"Jose Luis Garci",genre:"Cine",year:2024,rating:6.5},
+  {title:"La Isla de la Mujer Dormida",author:"Arturo Pérez-Reverte",genre:"Novela",year:2024,rating:6.7},
+  {title:"El Padrino",author:"Mario Puzo",genre:"Novela",year:2024,rating:9.25},
+  {title:"Victoria",author:"Paloma Sánchez-Garnica",genre:"Novela",year:2024,rating:8.0},
+  {title:"Maldita Roma II",author:"Santiago Posteguillo",genre:"Novela histórica",year:2025,rating:8.0},
+  {title:"Los Pilares de la Tierra",author:"Ken Follett",genre:"Novela",year:2025,rating:8.5},
+  {title:"Cien años de Soledad",author:"Gabriel García Márquez",genre:"Clásico",year:2025,rating:8.5},
+  {title:"La trilogía de Nueva York",author:"Paul Auster",genre:"Novela",year:2025,rating:6.8},
+  {title:"El coronel no tiene quien le escriba",author:"Gabriel García Márquez",genre:"Clásico",year:2025,rating:8.0},
+  {title:"Tres poetas de sus vidas",author:"Stefan Zweig",genre:"Biografía",year:2025,rating:9.0},
+  {title:"La fiesta del Chivo",author:"Mario Vargas Llosa",genre:"Novela",year:2025,rating:9.3},
+  {title:"Tiempos Recios",author:"Mario Vargas Llosa",genre:"Novela",year:2025,rating:8.0},
+  {title:"Mil ojos esconde la noche",author:"Juan Manuel de Prada",genre:"Novela",year:2025,rating:7.0},
+  {title:"Almendra",author:"Won-pyung Sohn",genre:"Novela",year:2025,rating:9.5},
+  {title:"El Impulso",author:"Won-pyung Sohn",genre:"Novela",year:2025,rating:7.5},
+  {title:"El Capitán Alatriste 1",author:"Arturo Pérez-Reverte",genre:"Novela aventuras",year:2025,rating:7.0},
+  {title:"Buena estrategia mala estrategia",author:"R. Rumelt",genre:"Negocios",year:2025,rating:7.0},
+  {title:"El Capitán Alatriste 2: Limpieza de Sangre",author:"Arturo Pérez-Reverte",genre:"Novela aventuras",year:2025,rating:7.0},
+  {title:"El Capitán Alatriste 3: El sol de Breda",author:"Arturo Pérez-Reverte",genre:"Novela aventuras",year:2025,rating:6.5},
+  {title:"El Arte de Correr",author:"Andrea Marcolongo",genre:"Deporte",year:2025,rating:8.0},
+  {title:"El asesinato de Platón",author:"Marcos Chicot",genre:"Novela histórica",year:2025,rating:7.5},
+  {title:"Respira",author:"James Nestor",genre:"Salud",year:2025,rating:8.8},
+  {title:"Cosas que los nietos deberían saber",author:"Mark Everett",genre:"Biografía",year:2025,rating:8.0},
+  {title:"Mis días en la librería Morisaki",author:"Satoshi Yagisawa",genre:"Novela",year:2025,rating:8.5},
+  {title:"Algo pasa con Baum",author:"Woody Allen",genre:"Novela",year:2025,rating:8.5},
+  {title:"Ikigai",author:"Héctor García y Francesc Miralles",genre:"Filosofía",year:2025,rating:6.3},
+  {title:"El Principito",author:"Antoine de Saint-Exupéry",genre:"Clásico",year:2025,rating:8.5},
+  {title:"El Almanaque del Pobre Charlie",author:"Charlie Munger",genre:"Filosofía",year:2026,rating:8.25},
+  {title:"Los Tres Mundos",author:"Santiago Posteguillo",genre:"Novela histórica",year:2026,rating:7.9},
+  {title:"Un día de cólera",author:"Arturo Pérez-Reverte",genre:"Novela histórica",year:2026,rating:6.7},
+  {title:"Mis días en el café Torunka",author:"Satoshi Yagisawa",genre:"Novela",year:2026,rating:8.0},
 ]
 
-const Stars = ({ rating }) => (
-  <span className="stars">{'★'.repeat(rating)}{'☆'.repeat(5 - rating)}</span>
+const RatingBar = ({ rating }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+    <div style={{ position: 'relative', width: 60, height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${rating * 10}%`, background: 'var(--gold)', borderRadius: 3 }} />
+    </div>
+    <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: 'var(--gold)' }}>{rating.toFixed(1)}</span>
+  </div>
 )
 
 export default function Books() {
@@ -99,10 +114,9 @@ export default function Books() {
   const [search, setSearch] = useState('')
   const [genre, setGenre] = useState('Todos')
   const [yr, setYr] = useState('Todos')
-  const [rat, setRat] = useState('Todos')
   const [modal, setModal] = useState(false)
   const [editing, setEditing] = useState(null)
-  const [form, setForm] = useState({ title: '', author: '', year: 2026, rating: 5, genre: 'Ficción histórica' })
+  const [form, setForm] = useState({ title: '', author: '', year: 2026, rating: 8.0, genre: 'Novela' })
 
   useEffect(() => { fetchBooks() }, [])
 
@@ -143,36 +157,50 @@ export default function Books() {
   const filtered = books.filter(b =>
     (b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase())) &&
     (genre === 'Todos' || b.genre === genre) &&
-    (yr === 'Todos' || String(b.year) === yr) &&
-    (rat === 'Todos' || b.rating === Number(rat))
+    (yr === 'Todos' || String(b.year) === yr)
   )
 
-  const avg = books.length ? (books.reduce((a, b) => a + b.rating, 0) / books.length).toFixed(1) : 0
+  const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
+  const best = books.length ? [...books].sort((a, b) => b.rating - a.rating)[0] : null
 
   return (
     <div>
       <div className="section-header">
         <div>
           <div className="section-title">Biblioteca</div>
-          <div className="section-sub">Lecturas personales</div>
+          <div className="section-sub">Lecturas personales · {books.length} libros</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {books.length === 0 && !loading && (
             <button className="btn-add" onClick={seedBooks} disabled={seeding}>
-              {seeding ? 'Cargando...' : '⬆ Importar 84 libros'}
+              {seeding ? 'Cargando...' : '⬆ Importar 94 libros'}
             </button>
           )}
-          <button className="btn-add" onClick={() => { setEditing(null); setForm({ title: '', author: '', year: 2026, rating: 5, genre: 'Ficción histórica' }); setModal(true) }}>
+          <button className="btn-add" onClick={() => { setEditing(null); setForm({ title: '', author: '', year: 2026, rating: 8.0, genre: 'Novela' }); setModal(true) }}>
             + Añadir libro
           </button>
         </div>
       </div>
 
       <div className="stats-row">
-        {[['Total leídos', books.length], ['Valoración media', avg + ' ★'], ['Este año', books.filter(b => b.year === 2026).length], ['Géneros', genres.length - 1]].map(([l, v]) =>
+        {[
+          ['Total leídos', books.length],
+          ['Nota media', avg + ' / 10'],
+          ['Este año', books.filter(b => b.year === 2026).length],
+          ['Géneros', genres.length - 1],
+        ].map(([l, v]) =>
           <div className="stat-card" key={l}><div className="stat-label">{l}</div><div className="stat-value">{v}</div></div>
         )}
       </div>
+
+      {best && (
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, padding: '10px 16px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Mejor valorado:</span>
+          <span style={{ color: 'var(--gold)', fontSize: 13 }}>{best.title}</span>
+          <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>— {best.author}</span>
+          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 12, color: 'var(--gold)', marginLeft: 'auto' }}>{Number(best.rating).toFixed(1)} / 10</span>
+        </div>
+      )}
 
       <div className="filters">
         <input className="search-input" placeholder="Buscar título o autor..." value={search} onChange={e => setSearch(e.target.value)} />
@@ -182,17 +210,12 @@ export default function Books() {
         <select className="filter-btn" value={yr} onChange={e => setYr(e.target.value)} style={{ cursor: 'pointer' }}>
           {years.map(y => <option key={y}>{y}</option>)}
         </select>
-        {['Todos', '5', '4', '3', '2', '1'].map(r => (
-          <button key={r} className={`filter-btn ${rat === r ? 'active' : ''}`} onClick={() => setRat(r)}>
-            {r === 'Todos' ? '⭐ Todos' : '★'.repeat(Number(r))}
-          </button>
-        ))}
       </div>
 
       {loading ? <div className="loading">CARGANDO BIBLIOTECA...</div> : (
         <div className="table-wrap">
           <table>
-            <thead><tr><th>#</th><th>Título</th><th>Autor</th><th>Género</th><th>Año</th><th>Valoración</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>Título</th><th>Autor</th><th>Género</th><th>Año</th><th>Nota</th><th></th></tr></thead>
             <tbody>
               {filtered.map((b, i) => (
                 <tr key={b.id}>
@@ -201,7 +224,7 @@ export default function Books() {
                   <td className="dim">{b.author}</td>
                   <td><span className="badge badge-gold">{b.genre}</span></td>
                   <td className="mono">{b.year}</td>
-                  <td><Stars rating={b.rating} /></td>
+                  <td><RatingBar rating={Number(b.rating)} /></td>
                   <td>
                     <button className="btn-icon" onClick={() => { setEditing(b.id); setForm({ title: b.title, author: b.author, year: b.year, rating: b.rating, genre: b.genre }); setModal(true) }}>✎</button>
                     <button className="btn-icon" onClick={() => remove(b.id)}>✕</button>
@@ -223,11 +246,7 @@ export default function Books() {
               <div className="form-group full"><label className="form-label">Autor</label><input className="form-input" value={form.author} onChange={e => setForm({ ...form, author: e.target.value })} /></div>
               <div className="form-group"><label className="form-label">Género</label><input className="form-input" value={form.genre} onChange={e => setForm({ ...form, genre: e.target.value })} /></div>
               <div className="form-group"><label className="form-label">Año leído</label><input className="form-input" type="number" value={form.year} onChange={e => setForm({ ...form, year: e.target.value })} /></div>
-              <div className="form-group"><label className="form-label">Valoración</label>
-                <select className="form-select" value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })}>
-                  {[5, 4, 3, 2, 1].map(r => <option key={r} value={r}>{'★'.repeat(r)} ({r})</option>)}
-                </select>
-              </div>
+              <div className="form-group"><label className="form-label">Nota (0–10)</label><input className="form-input" type="number" step="0.1" min="0" max="10" value={form.rating} onChange={e => setForm({ ...form, rating: e.target.value })} /></div>
             </div>
             <div className="btn-row">
               <button className="btn btn-ghost" onClick={() => setModal(false)}>Cancelar</button>
