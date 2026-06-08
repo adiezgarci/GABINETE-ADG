@@ -114,6 +114,7 @@ export default function Books() {
   const [search, setSearch] = useState('')
   const [genre, setGenre] = useState('Todos')
   const [yr, setYr] = useState('Todos')
+  const [sortBy, setSortBy] = useState('year')
   const [modal, setModal] = useState(false)
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({ title: '', author: '', year: 2026, rating: 8.0, genre: 'Novela' })
@@ -154,11 +155,13 @@ export default function Books() {
   const genres = ['Todos', ...Array.from(new Set(books.map(b => b.genre))).sort()]
   const years = ['Todos', ...Array.from(new Set(books.map(b => b.year))).sort((a, b) => b - a).map(String)]
 
-  const filtered = books.filter(b =>
-    (b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase())) &&
-    (genre === 'Todos' || b.genre === genre) &&
-    (yr === 'Todos' || String(b.year) === yr)
-  )
+  const filtered = books
+    .filter(b =>
+      (b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase())) &&
+      (genre === 'Todos' || b.genre === genre) &&
+      (yr === 'Todos' || String(b.year) === yr)
+    )
+    .sort((a, b) => sortBy === 'rating_desc' ? b.rating - a.rating : sortBy === 'rating_asc' ? a.rating - b.rating : b.year - a.year)
 
   const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
   const best = books.length ? [...books].sort((a, b) => b.rating - a.rating)[0] : null
@@ -204,6 +207,11 @@ export default function Books() {
 
       <div className="filters">
         <input className="search-input" placeholder="Buscar título o autor..." value={search} onChange={e => setSearch(e.target.value)} />
+        <select className="filter-btn" value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ cursor: 'pointer' }}>
+          <option value="year">Año (reciente)</option>
+          <option value="rating_desc">Nota (mayor a menor)</option>
+          <option value="rating_asc">Nota (menor a mayor)</option>
+        </select>
         <select className="filter-btn" value={genre} onChange={e => setGenre(e.target.value)} style={{ cursor: 'pointer' }}>
           {genres.map(g => <option key={g}>{g}</option>)}
         </select>
