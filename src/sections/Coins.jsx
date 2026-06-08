@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient.js'
 
+const STORAGE = 'https://sxbjqxmuypsmshmllffr.supabase.co/storage/v1/object/public/coins'
+
+const COIN_IMAGES = {
+  1: { anverso: `${STORAGE}/1-alejandro-anverso.jpeg`, reverso: `${STORAGE}/1-alejandro-reverso.jpeg` },
+  2: { anverso: `${STORAGE}/2-domiciano-anverso.jpeg`, reverso: `${STORAGE}/2-domiciano-reverso.jpeg` },
+  3: { anverso: `${STORAGE}/3-nerva-anverso.jpeg`, reverso: `${STORAGE}/3-nerva-reverso.jpeg` },
+  4: { anverso: `${STORAGE}/4-trajano-anverso.jpeg`, reverso: `${STORAGE}/4-trajano-reverso.jpeg` },
+  5: { anverso: `${STORAGE}/5-adriano-anverso.jpeg`, reverso: `${STORAGE}/5-adriano-reverso.jpeg` },
+  6: { anverso: `${STORAGE}/6-antonino-anverso.jpeg`, reverso: `${STORAGE}/6-antonino-reverso.jpeg` },
+  7: { anverso: `${STORAGE}/7-marco-aurelio-anverso.jpeg`, reverso: `${STORAGE}/7-marco-aurelio-reverso.jpeg` },
+  8: { anverso: `${STORAGE}/8-septimio-anverso.jpeg`, reverso: `${STORAGE}/8-septimio-reverso.jpeg` },
+  9: { anverso: `${STORAGE}/9-caracalla-anverso.jpeg`, reverso: `${STORAGE}/9-caracalla-reverso.jpeg` },
+  10: { anverso: `${STORAGE}/10-geta-anverso.jpeg`, reverso: `${STORAGE}/10-geta-reverso.jpeg` },
+  11: { anverso: `${STORAGE}/11-heliogabalo-anverso.jpeg`, reverso: `${STORAGE}/11-heliogabalo-reverso.jpeg` },
+  12: { anverso: `${STORAGE}/12-alejandro-severo-anverso.jpeg`, reverso: `${STORAGE}/12-alejandro-severo-reverso.jpeg` },
+}
+
 const SEED_COINS = [
   { character: "Alejandro Magno (póstumo)", mint_year: "310–301 a.C.", weight: 4.08, buy_price: 75, market_value: 75, buy_date: "2024", buy_place: "Numismática Mayor 25", obverse: "Heracles con piel de león nemeo", reverse: "Zeus entronizado con águila", conservation: null, description: "Dracma de plata acuñada de forma póstuma en nombre de Alejandro III de Macedonia, el Grande (356–323 a.C.), el conquistador más célebre de la Antigüedad. Alejandro nunca se representó a sí mismo en vida en sus monedas —por respeto a la tradición griega que reservaba ese honor a los dioses—, sino que usó la imagen de Heracles, héroe con el que se identificaba y del que reclamaba descendencia a través del linaje argéada. El reverso muestra a Zeus Olímpico sentado en su trono, sosteniendo un águila y un cetro, símbolo de poder universal. Tras la muerte de Alejandro en Babilonia (323 a.C.), sus sucesores —los diádocos— continuaron acuñando con estos tipos durante décadas, pues la moneda alejandrina era la divisa más reconocida y confiable del mundo helenístico. Esta pieza fue acuñada durante las Guerras de los Diádocos, el turbulento período en que los generales de Alejandro se disputaron su vasto imperio a sangre y fuego." },
   { character: "Domiciano (bajo Vespasiano)", mint_year: "77–78 d.C.", weight: null, buy_price: 90, market_value: 90, buy_date: "24/05/2026", buy_place: "Plaza Mayor, Madrid (Numismadrid)", obverse: "Retrato laureado de Domiciano con leyenda imperial", reverse: "Loba con inscripción COS V (quinto consulado)", conservation: null, description: "Denario de plata acuñado en nombre de Tito Flavio Domiciano (51–96 d.C.) durante el reinado de su padre, el emperador Vespasiano (69–79 d.C.), fundador de la dinastía Flavia. En el momento de esta acuñación Domiciano era César —heredero designado— pero aún no augusto, pues su hermano mayor Tito era el sucesor oficial. La inscripción COS V del reverso confirma el quinto consulado de Domiciano, datando la pieza con precisión en el año 77-78 d.C. El reverso muestra una loba, símbolo fundacional de Roma que remite al mito de Rómulo y Remo, evocando la legitimidad y la continuidad dinástica flavia. Vespasiano había llegado al poder tras el caótico Año de los Cuatro Emperadores (69 d.C.) y necesitaba proyectar estabilidad: acuñar con la imagen de su hijo era un mensaje político claro. Domiciano acabaría reinando entre el 81 y el 96 d.C., siendo uno de los emperadores más controvertidos de Roma —brillante administrador y constructor, pero temido por el Senado, que lo condenó a la damnatio memoriae tras su asesinato." },
@@ -95,6 +112,18 @@ export default function Coins() {
           <div>
             <div className="detail-title">{selected.character}</div>
             <div className="detail-period">🪙 {selected.mint_year} · {selected.weight ? selected.weight + 'g' : 'peso p/d'} · {selected.buy_place}</div>
+            {COIN_IMAGES[selected.id] && (
+              <div style={{ display: 'flex', gap: 12, margin: '12px 0' }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 4 }}>Anverso</div>
+                  <img src={COIN_IMAGES[selected.id].anverso} alt="anverso" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 50, border: '2px solid var(--gold-dim)' }} />
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 4 }}>Reverso</div>
+                  <img src={COIN_IMAGES[selected.id].reverso} alt="reverso" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 50, border: '2px solid var(--gold-dim)' }} />
+                </div>
+              </div>
+            )}
             <div style={{ marginBottom: 10, fontSize: 12 }}>
               <span style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono',monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: '.06em' }}>Anv: </span>
               <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>{selected.obverse}</span><br />
