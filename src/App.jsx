@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import Books from './sections/Books.jsx'
 import Coins from './sections/Coins.jsx'
-import Portfolio from './sections/Portfolio.jsx'
 import './App.css'
 
 const NAV = [
   { id: 'books', label: 'Biblioteca', icon: '📚' },
   { id: 'coins', label: 'Monedas', icon: '🪙' },
-  { id: 'portfolio', label: 'Portfolio', icon: '📈' },
 ]
 
 export default function App() {
@@ -37,7 +35,6 @@ export default function App() {
       <main className="main">
         {active === 'books' && <Books />}
         {active === 'coins' && <Coins />}
-        {active === 'portfolio' && <Portfolio />}
       </main>
     </div>
   )
