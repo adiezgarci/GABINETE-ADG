@@ -196,15 +196,6 @@ export default function Books() {
         )}
       </div>
 
-      {best && (
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, padding: '10px 16px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Mejor valorado:</span>
-          <span style={{ color: 'var(--gold)', fontSize: 13 }}>{best.title}</span>
-          <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>— {best.author}</span>
-          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 12, color: 'var(--gold)', marginLeft: 'auto' }}>{Number(best.rating).toFixed(1)} / 10</span>
-        </div>
-      )}
-
       <div className="filters">
         <input className="search-input" placeholder="Buscar título o autor..." value={search} onChange={e => setSearch(e.target.value)} />
         <select className="filter-btn" value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ cursor: 'pointer' }}>
