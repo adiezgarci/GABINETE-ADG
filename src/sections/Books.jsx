@@ -163,7 +163,42 @@ export default function Books() {
     )
     .sort((a, b) => sortBy === 'rating_desc' ? b.rating - a.rating : sortBy === 'rating_asc' ? a.rating - b.rating : b.year - a.year)
 
-  const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiResult, setAiResult] = useState('')
+  const [showAi, setShowAi] = useState(false)
+
+  const getRecommendations = async () => {
+    setAiLoading(true)
+    setShowAi(true)
+    setAiResult('')
+
+    const top10 = [...books].sort((a, b) => b.rating - a.rating).slice(0, 10)
+    const genreCount = {}
+    books.forEach(b => { genreCount[b.genre] = (genreCount[b.genre] || 0) + 1 })
+    const topGenres = Object.entries(genreCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([g]) => g)
+    const topAuthors = [...new Set(books.filter(b => b.rating >= 9).map(b => b.author))].slice(0, 8)
+
+    const prompt = `Soy un lector con ${books.length} libros registrados. Mis 10 libros mejor valorados son: ${top10.map(b => `"${b.title}" de ${b.author} (${b.rating}/10)`).join(', ')}. Mis géneros favoritos son: ${topGenres.join(', ')}. Los autores que más me gustan (nota ≥9): ${topAuthors.join(', ')}. 
+
+Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, explicando brevemente por qué cada uno encajaría con mis gustos. Sé específico y personalizado. Responde en español.`
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      })
+      const data = await response.json()
+      setAiResult(data.content?.[0]?.text || 'No se pudo generar la respuesta.')
+    } catch (e) {
+      setAiResult('Error al conectar con la IA.')
+    }
+    setAiLoading(false)
+  }
   const best = books.length ? [...books].sort((a, b) => b.rating - a.rating)[0] : null
 
   return (
@@ -174,6 +209,9 @@ export default function Books() {
           <div className="section-sub">Lecturas personales · {books.length} libros</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn-add" onClick={getRecommendations} disabled={aiLoading || books.length === 0}>
+            {aiLoading ? '⏳ Analizando...' : '✨ Recomendaciones IA'}
+          </button>
           {books.length === 0 && !loading && (
             <button className="btn-add" onClick={seedBooks} disabled={seeding}>
               {seeding ? 'Cargando...' : '⬆ Importar 94 libros'}
@@ -195,6 +233,28 @@ export default function Books() {
           <div className="stat-card" key={l}><div className="stat-label">{l}</div><div className="stat-value">{v}</div></div>
         )}
       </div>
+
+      {best && (
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, padding: '10px 16px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Mejor valorado:</span>
+          <span style={{ color: 'var(--gold)', fontSize: 13 }}>{best.title}</span>
+          <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>— {best.author}</span>
+          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 12, color: 'var(--gold)', marginLeft: 'auto' }}>{Number(best.rating).toFixed(1)} / 10</span>
+        </div>
+      )}
+
+      {showAi && (
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '20px 24px', marginBottom: 22 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+            <span style={{ fontFamily: "'Playfair Display',serif", fontSize: 16, color: 'var(--gold)' }}>✨ Recomendaciones personalizadas</span>
+            <button className="btn-icon" onClick={() => setShowAi(false)}>✕</button>
+          </div>
+          {aiLoading
+            ? <div style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono',monospace", fontSize: 12 }}>Analizando tus {books.length} libros...</div>
+            : <div style={{ color: 'var(--text-dim)', fontSize: 13, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{aiResult}</div>
+          }
+        </div>
+      )}
 
       <div className="filters">
         <input className="search-input" placeholder="Buscar título o autor..." value={search} onChange={e => setSearch(e.target.value)} />
