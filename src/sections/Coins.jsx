@@ -34,10 +34,19 @@ export default function Coins() {
   const [modal, setModal] = useState(false)
   const [editing, setEditing] = useState(null)
   const [lightbox, setLightbox] = useState(null)
+  const [tBuy, setTBuy] = useState(0)
+  const [tMkt, setTMkt] = useState(0)
   const emptyForm = { character: '', mint_year: '', weight: '', buy_price: '', market_value: '', buy_date: '', buy_place: '', obverse: '', reverse: '', conservation: '', description: '' }
   const [form, setForm] = useState(emptyForm)
 
   useEffect(() => { fetchCoins() }, [])
+
+  useEffect(() => {
+    setTBuy(coins.reduce((a, c) => a + Number(c.buy_price), 0))
+    setTMkt(coins.reduce((a, c) => a + Number(c.market_value), 0))
+  }, [coins])
+
+  const tPnl = tMkt - tBuy
 
   const fetchCoins = async () => {
     setLoading(true)
@@ -90,10 +99,6 @@ export default function Coins() {
     if (selected?.id === id) setSelected(null)
   }
 
-  const tBuy = coins.reduce((a, c) => a + Number(c.buy_price), 0)
-  const tMkt = coins.reduce((a, c) => a + Number(c.market_value), 0)
-  const tPnl = tMkt - tBuy
-
   return (
     <div>
       <div className="section-header">
@@ -128,23 +133,13 @@ export default function Coins() {
                 {selected.obverse_url && (
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Anverso</div>
-                    <img
-                      src={selected.obverse_url}
-                      alt="anverso"
-                      onClick={() => setLightbox(selected.obverse_url)}
-                      style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)', cursor: 'zoom-in' }}
-                    />
+                    <img src={selected.obverse_url} alt="anverso" onClick={() => setLightbox(selected.obverse_url)} style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)', cursor: 'zoom-in' }} />
                   </div>
                 )}
                 {selected.reverse_url && (
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Reverso</div>
-                    <img
-                      src={selected.reverse_url}
-                      alt="reverso"
-                      onClick={() => setLightbox(selected.reverse_url)}
-                      style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)', cursor: 'zoom-in' }}
-                    />
+                    <img src={selected.reverse_url} alt="reverso" onClick={() => setLightbox(selected.reverse_url)} style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)', cursor: 'zoom-in' }} />
                   </div>
                 )}
               </div>
