@@ -14,10 +14,10 @@
   --gold-dim: #8a6828;
   --gold-pale: #f0d898;
   --gold-glow: rgba(200,160,80,0.08);
-  --text: #5a3e20;
-  --text-dim: #7a5a38;
-  --text-muted: #9a7a58;
-  --text-light: #b89870;
+  --text: #2e1a08;
+  --text-dim: #4a2e10;
+  --text-muted: #6a4820;
+  --text-light: #8a6838;
   --green: #4a7828;
   --green-dim: rgba(74,120,40,0.1);
   --red: #8a3020;
@@ -37,7 +37,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'EB Garamond', Georgia, serif;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -246,7 +246,7 @@ body::before {
 
 .section-title {
   font-family: 'Cinzel', serif;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 400;
   color: var(--gold-dim);
   letter-spacing: 0.06em;
@@ -301,7 +301,7 @@ body::before {
 
 .stat-value {
   font-family: 'Cinzel', serif;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 400;
   color: var(--gold-dim);
   line-height: 1;
@@ -353,7 +353,7 @@ body::before {
 /* â”€â”€ TABLE â”€â”€ */
 .table-wrap { overflow-x: auto; }
 
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 16px; }
 
 thead th {
   font-family: 'Cinzel', serif;
@@ -429,7 +429,7 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
 
 .detail-title {
   font-family: 'Cinzel', serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 400;
   color: var(--gold-dim);
   margin-bottom: 4px;
@@ -447,7 +447,7 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
 
 .detail-description {
   font-family: 'IM Fell English', serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text);
   line-height: 1.8;
   font-style: italic;
@@ -508,7 +508,7 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
 
 .modal-title {
   font-family: 'Cinzel', serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 400;
   margin-bottom: 20px;
   color: var(--gold-dim);
@@ -528,14 +528,7 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
   color: var(--text-muted);
 }
 
-.form-input, .form-select, .form-textarea {
-  background: rgba(255,252,244,0.9);
-  border: 1px solid var(--border-light);
-  color: var(--text);
-  padding: 8px 12px;
-  border-radius: 3px;
-  font-family: 'EB Garamond', serif;
-  font-size: 14px;
+  font-size: 16px;
   outline: none;
   transition: border 0.15s;
 }
