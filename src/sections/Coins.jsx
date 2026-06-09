@@ -36,7 +36,7 @@ export default function Coins() {
   const [lightbox, setLightbox] = useState(null)
   const [tBuy, setTBuy] = useState(0)
   const [tMkt, setTMkt] = useState(0)
-  const emptyForm = { character: '', mint_year: '', weight: '', buy_price: '', market_value: '', buy_date: '', buy_place: '', obverse: '', reverse: '', conservation: '', description: '' }
+  const emptyForm = { character: '', mint_year: '', weight: '', buy_price: '', market_value: '', buy_date: '', buy_place: '', obverse: '', reverse: '', conservation: '', description: '', obverseFile: null, reverseFile: null }
   const [form, setForm] = useState(emptyForm)
 
   useEffect(() => { fetchCoins() }, [])
@@ -69,6 +69,16 @@ export default function Coins() {
     setSeeding(false)
   }
 
+  const uploadImage = async (file, coinId, side) => {
+    if (!file) return null
+    const ext = file.name.split('.').pop()
+    const path = `${coinId}-${side}.${ext}`
+    const { error } = await supabase.storage.from('coins').upload(path, file, { upsert: true })
+    if (error) return null
+    const { data } = supabase.storage.from('coins').getPublicUrl(path)
+    return data.publicUrl
+  }
+
   const save = async () => {
     if (!form.character.trim()) return
     const entry = {
@@ -84,11 +94,26 @@ export default function Coins() {
       reverse: form.reverse,
       description: form.description,
     }
+
+    let savedId = editing
     if (editing) {
       await supabase.from('coins').update(entry).eq('id', editing)
     } else {
-      await supabase.from('coins').insert(entry)
+      const { data } = await supabase.from('coins').insert(entry).select()
+      savedId = data?.[0]?.id
     }
+
+    if (savedId) {
+      if (form.obverseFile) {
+        const url = await uploadImage(form.obverseFile, savedId, 'anverso')
+        if (url) await supabase.from('coins').update({ obverse_url: url }).eq('id', savedId)
+      }
+      if (form.reverseFile) {
+        const url = await uploadImage(form.reverseFile, savedId, 'reverso')
+        if (url) await supabase.from('coins').update({ reverse_url: url }).eq('id', savedId)
+      }
+    }
+
     await fetchCoins()
     setModal(false)
   }
@@ -225,6 +250,16 @@ export default function Coins() {
               <div className="form-group full"><label className="form-label">Anverso</label><input className="form-input" value={form.obverse} onChange={e => setForm({ ...form, obverse: e.target.value })} /></div>
               <div className="form-group full"><label className="form-label">Reverso</label><input className="form-input" value={form.reverse} onChange={e => setForm({ ...form, reverse: e.target.value })} /></div>
               <div className="form-group full"><label className="form-label">Descripción histórica</label><textarea className="form-textarea" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={5} /></div>
+              <div className="form-group">
+                <label className="form-label">Foto anverso</label>
+                <input className="form-input" type="file" accept="image/*" onChange={e => setForm({ ...form, obverseFile: e.target.files[0] })} style={{ padding: '6px 12px', cursor: 'pointer' }} />
+                {form.obverseFile && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>✓ {form.obverseFile.name}</span>}
+              </div>
+              <div className="form-group">
+                <label className="form-label">Foto reverso</label>
+                <input className="form-input" type="file" accept="image/*" onChange={e => setForm({ ...form, reverseFile: e.target.files[0] })} style={{ padding: '6px 12px', cursor: 'pointer' }} />
+                {form.reverseFile && <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>✓ {form.reverseFile.name}</span>}
+              </div>
             </div>
             <div className="btn-row">
               <button className="btn btn-ghost" onClick={() => setModal(false)}>Cancelar</button>
