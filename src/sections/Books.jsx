@@ -101,9 +101,9 @@ const SEED_BOOKS = [
 const RatingBar = ({ rating }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
     <div style={{ position: 'relative', width: 60, height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${rating * 10}%`, background: 'var(--gold)', borderRadius: 3 }} />
+      <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${rating * 10}%`, background: 'var(--gold-dim)', borderRadius: 3 }} />
     </div>
-    <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: 'var(--gold)' }}>{rating.toFixed(1)}</span>
+    <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: 'var(--gold-dim)' }}>{Number(rating).toFixed(1)}</span>
   </div>
 )
 
@@ -152,8 +152,24 @@ export default function Books() {
     setBooks(books.filter(b => b.id !== id))
   }
 
+  const getRecommendations = async () => {
+    const top10 = [...books].sort((a, b) => b.rating - a.rating).slice(0, 10)
+    const genreCount = {}
+    books.forEach(b => { genreCount[b.genre] = (genreCount[b.genre] || 0) + 1 })
+    const topGenres = Object.entries(genreCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([g]) => g)
+    const topAuthors = [...new Set(books.filter(b => b.rating >= 9).map(b => b.author))].slice(0, 8)
+    const prompt = `Soy un lector con ${books.length} libros registrados. Mis 10 libros mejor valorados son: ${top10.map(b => `"${b.title}" de ${b.author} (${b.rating}/10)`).join(', ')}. Mis géneros favoritos son: ${topGenres.join(', ')}. Los autores que más me gustan (nota ≥9): ${topAuthors.join(', ')}. Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, explicando brevemente por qué cada uno encajaría con mis gustos. Responde en español.`
+    try {
+      await navigator.clipboard.writeText(prompt)
+      alert('✓ Prompt copiado al portapapeles. Pégalo en Claude para obtener tus recomendaciones personalizadas.')
+    } catch (e) {
+      alert('Abre Claude y pide recomendaciones basadas en tus ' + books.length + ' libros.')
+    }
+  }
+
   const genres = ['Todos', ...Array.from(new Set(books.map(b => b.genre))).sort()]
   const years = ['Todos', ...Array.from(new Set(books.map(b => b.year))).sort((a, b) => b - a).map(String)]
+  const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
 
   const filtered = books
     .filter(b =>
@@ -163,44 +179,6 @@ export default function Books() {
     )
     .sort((a, b) => sortBy === 'rating_desc' ? b.rating - a.rating : sortBy === 'rating_asc' ? a.rating - b.rating : b.year - a.year)
 
-  const [aiLoading, setAiLoading] = useState(false)
-  const [aiResult, setAiResult] = useState('')
-  const [showAi, setShowAi] = useState(false)
-
-  const getRecommendations = async () => {
-    setAiLoading(true)
-    setShowAi(true)
-    setAiResult('')
-
-    const top10 = [...books].sort((a, b) => b.rating - a.rating).slice(0, 10)
-    const genreCount = {}
-    books.forEach(b => { genreCount[b.genre] = (genreCount[b.genre] || 0) + 1 })
-    const topGenres = Object.entries(genreCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([g]) => g)
-    const topAuthors = [...new Set(books.filter(b => b.rating >= 9).map(b => b.author))].slice(0, 8)
-
-    const prompt = `Soy un lector con ${books.length} libros registrados. Mis 10 libros mejor valorados son: ${top10.map(b => `"${b.title}" de ${b.author} (${b.rating}/10)`).join(', ')}. Mis géneros favoritos son: ${topGenres.join(', ')}. Los autores que más me gustan (nota ≥9): ${topAuthors.join(', ')}. 
-
-Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, explicando brevemente por qué cada uno encajaría con mis gustos. Sé específico y personalizado. Responde en español.`
-
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
-        })
-      })
-      const data = await response.json()
-      setAiResult(data.content?.[0]?.text || 'No se pudo generar la respuesta.')
-    } catch (e) {
-      setAiResult('Error al conectar con la IA.')
-    }
-    setAiLoading(false)
-  }
-  const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
-
   return (
     <div>
       <div className="section-header">
@@ -209,8 +187,8 @@ Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, expli
           <div className="section-sub">Lecturas personales · {books.length} libros</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn-add" onClick={getRecommendations} disabled={aiLoading || books.length === 0}>
-            {aiLoading ? '⏳ Analizando...' : '✨ Recomendaciones IA'}
+          <button className="btn-add" onClick={getRecommendations} disabled={books.length === 0}>
+            ✨ Recomendaciones IA
           </button>
           {books.length === 0 && !loading && (
             <button className="btn-add" onClick={seedBooks} disabled={seeding}>
@@ -234,19 +212,6 @@ Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, expli
         )}
       </div>
 
-      {showAi && (
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '20px 24px', marginBottom: 22 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <span style={{ fontFamily: "'Playfair Display',serif", fontSize: 16, color: 'var(--gold)' }}>✨ Recomendaciones personalizadas</span>
-            <button className="btn-icon" onClick={() => setShowAi(false)}>✕</button>
-          </div>
-          {aiLoading
-            ? <div style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono',monospace", fontSize: 12 }}>Analizando tus {books.length} libros...</div>
-            : <div style={{ color: 'var(--text-dim)', fontSize: 13, lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{aiResult}</div>
-          }
-        </div>
-      )}
-
       <div className="filters">
         <input className="search-input" placeholder="Buscar título o autor..." value={search} onChange={e => setSearch(e.target.value)} />
         <select className="filter-btn" value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ cursor: 'pointer' }}>
@@ -262,7 +227,7 @@ Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, expli
         </select>
       </div>
 
-      {loading ? <div className="loading">CARGANDO BIBLIOTECA...</div> : (
+      {loading ? <div className="loading">Cargando biblioteca...</div> : (
         <div className="table-wrap">
           <table>
             <thead><tr><th>#</th><th>Título</th><th>Autor</th><th>Género</th><th>Año</th><th>Nota</th><th></th></tr></thead>
