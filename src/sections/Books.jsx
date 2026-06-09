@@ -199,6 +199,7 @@ Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, expli
     }
     setAiLoading(false)
   }
+  const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
   const best = books.length ? [...books].sort((a, b) => b.rating - a.rating)[0] : null
 
   return (
