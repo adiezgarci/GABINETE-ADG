@@ -3,7 +3,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
---bg: #080706;
+  --bg: #080706;
   --surface: #0f0d0b;
   --surface2: #161310;
   --surface3: #1e1a15;
@@ -589,3 +589,101 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+/* â”€â”€ RESPONSIVE MÃ“VIL â”€â”€ */
+@media (max-width: 768px) {
+  .app { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow: visible;
+  }
+
+  .sidebar::before { display: none; }
+
+  .sidebar-header {
+    padding: 20px 18px 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .monogram {
+    width: 36px; height: 36px;
+    margin-bottom: 0;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-title {
+    font-size: 16px;
+  }
+
+  .nav {
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    overflow-x: auto;
+  }
+
+  .nav-section-label { display: none; }
+
+  .nav-item {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .sidebar-footer { display: none; }
+
+  .main {
+    padding: 20px 16px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .section-title { font-size: 26px; }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card { padding: 14px 16px; }
+  .stat-value { font-size: 22px; }
+
+  .detail-panel {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 18px;
+  }
+
+  .filters {
+    gap: 6px;
+  }
+
+  .search-input {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  table { font-size: 12px; }
+  thead th { padding: 8px 10px; }
+  td { padding: 10px 10px; }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+}
