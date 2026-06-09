@@ -44,8 +44,11 @@ export default function Coins() {
     const { data } = await supabase.from('coins').select('*').order('id')
     if (data) {
       setCoins(data)
-      if (data.length > 0 && !selected) setSelected(data[0])
-      setSelected(prev => prev ? data.find(c => c.id === prev.id) || null : null)
+      setSelected(prev => {
+        if (!prev && data.length > 0) return data[0]
+        if (prev) return data.find(c => c.id === prev.id) || null
+        return null
+      })
     }
     setLoading(false)
   }
