@@ -95,6 +95,22 @@ export default function Coins() {
           <div>
             <div className="detail-title">{selected.character}</div>
             <div className="detail-period">🪙 {selected.mint_year} · {selected.weight ? selected.weight + 'g' : 'peso p/d'} · {selected.buy_place}</div>
+            {(selected.obverse_url || selected.reverse_url) && (
+              <div style={{ display: 'flex', gap: 16, margin: '14px 0' }}>
+                {selected.obverse_url && (
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Anverso</div>
+                    <img src={selected.obverse_url} alt="anverso" style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)' }} />
+                  </div>
+                )}
+                {selected.reverse_url && (
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Reverso</div>
+                    <img src={selected.reverse_url} alt="reverso" style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)' }} />
+                  </div>
+                )}
+              </div>
+            )}
             <div style={{ marginBottom: 10, fontSize: 12 }}>
               <span style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono',monospace", fontSize: 10, textTransform: 'uppercase', letterSpacing: '.06em' }}>Anv: </span>
               <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>{selected.obverse}</span><br />
