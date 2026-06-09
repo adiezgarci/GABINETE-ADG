@@ -138,7 +138,7 @@ body::before {
 
 .nav-section-label {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
+  font-size: 10px;
   color: var(--gold-dim);
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -292,7 +292,7 @@ body::before {
 
 .stat-label {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
+  font-size: 11px;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -357,7 +357,7 @@ table { width: 100%; border-collapse: collapse; font-size: 16px; }
 
 thead th {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--text-muted);
@@ -464,8 +464,8 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
 }
 
 .detail-row:last-child { border-bottom: none; padding-bottom: 0; }
-.detail-key { font-family: 'Cinzel', serif; font-size: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; }
-.detail-val { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); }
+.detail-key { font-family: 'Cinzel', serif; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; }
+.detail-val { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text-dim); }
 .detail-val.gold { color: var(--gold-dim); }
 .detail-val.green { color: var(--green); }
 .detail-val.red { color: var(--red); }
@@ -522,7 +522,7 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
 
 .form-label {
   font-family: 'Cinzel', serif;
-  font-size: 8px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--text-muted);
