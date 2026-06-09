@@ -25,6 +25,7 @@ export default function Coins() {
   const [selected, setSelected] = useState(null)
   const [modal, setModal] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [lightbox, setLightbox] = useState(null)
   const emptyForm = { character: '', mint_year: '', weight: '', buy_price: '', market_value: '', buy_date: '', buy_place: '', obverse: '', reverse: '', conservation: '', description: '' }
   const [form, setForm] = useState(emptyForm)
 
@@ -100,13 +101,23 @@ export default function Coins() {
                 {selected.obverse_url && (
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Anverso</div>
-                    <img src={selected.obverse_url} alt="anverso" style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)' }} />
+                    <img
+                      src={selected.obverse_url}
+                      alt="anverso"
+                      onClick={() => setLightbox(selected.obverse_url)}
+                      style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)', cursor: 'zoom-in' }}
+                    />
                   </div>
                 )}
                 {selected.reverse_url && (
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontFamily: "'DM Mono',monospace", fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>Reverso</div>
-                    <img src={selected.reverse_url} alt="reverso" style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)' }} />
+                    <img
+                      src={selected.reverse_url}
+                      alt="reverso"
+                      onClick={() => setLightbox(selected.reverse_url)}
+                      style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: '50%', border: '2px solid var(--gold-dim)', cursor: 'zoom-in' }}
+                    />
                   </div>
                 )}
               </div>
@@ -169,6 +180,12 @@ export default function Coins() {
         </div>
       )}
       <div style={{ marginTop: 10, fontFamily: "'DM Mono',monospace", fontSize: 10, color: 'var(--text-muted)', letterSpacing: '.05em' }}>↑ Haz clic en una fila para ver la ficha completa</div>
+
+      {lightbox && (
+        <div onClick={() => setLightbox(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, cursor: 'zoom-out' }}>
+          <img src={lightbox} alt="moneda ampliada" style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 12, border: '2px solid var(--gold-dim)', boxShadow: '0 0 60px rgba(0,0,0,0.8)' }} />
+        </div>
+      )}
 
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(false)}>
