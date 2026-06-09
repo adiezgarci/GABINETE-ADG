@@ -200,7 +200,6 @@ Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, expli
     setAiLoading(false)
   }
   const avg = books.length ? (books.reduce((a, b) => a + Number(b.rating), 0) / books.length).toFixed(1) : 0
-  const best = books.length ? [...books].sort((a, b) => b.rating - a.rating)[0] : null
 
   return (
     <div>
@@ -234,15 +233,6 @@ Por favor, recomiéndame exactamente 8 libros que no haya leído todavía, expli
           <div className="stat-card" key={l}><div className="stat-label">{l}</div><div className="stat-value">{v}</div></div>
         )}
       </div>
-
-      {best && (
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, padding: '10px 16px', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Mejor valorado:</span>
-          <span style={{ color: 'var(--gold)', fontSize: 13 }}>{best.title}</span>
-          <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>— {best.author}</span>
-          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 12, color: 'var(--gold)', marginLeft: 'auto' }}>{Number(best.rating).toFixed(1)} / 10</span>
-        </div>
-      )}
 
       {showAi && (
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '20px 24px', marginBottom: 22 }}>
