@@ -631,7 +631,7 @@ td.red { color: var(--red); font-family: 'DM Mono', monospace; font-size: 12px; 
   .sidebar-title { font-size: 11px; }
   .nav { padding: 6px 10px; display: flex; flex-direction: row; gap: 4px; overflow-x: auto; }
   .nav-section-label { display: none; }
-  .nav-item { flex-shrink: 0; padding: 7px 12px; font-size: 9px; }
+  .nav-item { flex: 1; flex-shrink: 0; padding: 7px 8px; font-size: 9px; justify-content: center; text-align: center; }
   .sidebar-footer { display: none; }
   .main { padding: 20px 16px; background: rgba(240,228,204,0.88); }
   .section-title { font-size: 20px; }
