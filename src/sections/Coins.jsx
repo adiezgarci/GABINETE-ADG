@@ -16,6 +16,14 @@ const SEED_COINS = [
   { character: "Alejandro Severo", mint_year: "223 d.C.", weight: 3.2, buy_price: 70, market_value: 70, buy_date: "13/03/2026", buy_place: "Catawiki (subasta online)", obverse: "Retrato juvenil laureado de Alejandro Severo", reverse: "Figura femenina de pie (Pax o Spes)", conservation: "MBC", description: "Denario de plata de Alejandro Severo, último emperador de la dinastía Severa. Gobernante moderado y culto, fue asesinado por sus soldados en el 235 d.C. Su muerte abrió la Crisis del Siglo III." },
 ]
 
+const toRoman = (n) => {
+  const v = [1000,900,500,400,100,90,50,40,10,9,5,4,1]
+  const s = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I']
+  let r = ''
+  v.forEach((val, i) => { while (n >= val) { r += s[i]; n -= val } })
+  return r
+}
+
 const fmtD = n => n != null ? Number(n).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'
 
 export default function Coins() {
@@ -159,7 +167,7 @@ export default function Coins() {
                 const pct = c.buy_price ? ((pnl / c.buy_price) * 100).toFixed(1) : 0
                 return (
                   <tr key={c.id} onClick={() => setSelected(c)} style={{ cursor: 'pointer', background: selected?.id === c.id ? 'rgba(200,169,110,.06)' : '' }}>
-                    <td className="mono dim">{i + 1}</td>
+                    <td className="mono dim">{toRoman(i + 1)}</td>
                     <td style={{ fontWeight: 500 }}>{c.character}</td>
                     <td className="mono dim">{c.mint_year}</td>
                     <td className="mono">{c.weight ? c.weight + ' g' : '—'}</td>
