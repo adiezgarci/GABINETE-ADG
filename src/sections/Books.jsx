@@ -98,6 +98,14 @@ const SEED_BOOKS = [
   {title:"Mis días en el café Torunka",author:"Satoshi Yagisawa",genre:"Novela",year:2026,rating:8.0},
 ]
 
+const toRoman = (n) => {
+  const v = [1000,900,500,400,100,90,50,40,10,9,5,4,1]
+  const s = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I']
+  let r = ''
+  v.forEach((val, i) => { while (n >= val) { r += s[i]; n -= val } })
+  return r
+}
+
 const RatingBar = ({ rating }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
     <div style={{ position: 'relative', width: 60, height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden' }}>
@@ -234,7 +242,7 @@ export default function Books() {
             <tbody>
               {filtered.map((b, i) => (
                 <tr key={b.id}>
-                  <td className="mono dim">{i + 1}</td>
+                  <td className="mono dim">{toRoman(i + 1)}</td>
                   <td style={{ fontWeight: 500 }}>{b.title}</td>
                   <td className="dim">{b.author}</td>
                   <td><span className="badge badge-gold">{b.genre}</span></td>
