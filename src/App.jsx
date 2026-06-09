@@ -15,9 +15,13 @@ export default function App() {
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="monogram">A</div>
-          <span className="sidebar-title">Gabinete<br />Adrián</span>
+          <div className="sidebar-title">
+            Gabinete Adrián
+            <span>Colección personal</span>
+          </div>
         </div>
         <nav className="nav">
+          <div className="nav-section-label">Colecciones</div>
           {NAV.map(item => (
             <button
               key={item.id}
@@ -26,11 +30,13 @@ export default function App() {
             >
               <span className="nav-icon">{item.icon}</span>
               <span className="nav-label">{item.label}</span>
-              {active === item.id && <span className="nav-indicator" />}
             </button>
           ))}
         </nav>
-        <div className="sidebar-footer">Gabinete Personal · v1.0</div>
+        <div className="sidebar-footer">
+          <div className="sidebar-footer-text">Gabinete Personal · v1.0</div>
+          <div className="sidebar-footer-url">gabinete-adg.vercel.app</div>
+        </div>
       </aside>
       <main className="main">
         {active === 'books' && <Books />}
