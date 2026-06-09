@@ -55,7 +55,19 @@ export default function Coins() {
 
   const save = async () => {
     if (!form.character.trim()) return
-    const entry = { ...form, weight: form.weight ? Number(form.weight) : null, buy_price: Number(form.buy_price), market_value: Number(form.market_value) }
+    const entry = {
+      character: form.character,
+      mint_year: form.mint_year,
+      weight: form.weight ? Number(form.weight) : null,
+      buy_price: Number(form.buy_price),
+      market_value: Number(form.market_value),
+      buy_date: form.buy_date,
+      buy_place: form.buy_place,
+      conservation: form.conservation || null,
+      obverse: form.obverse,
+      reverse: form.reverse,
+      description: form.description,
+    }
     if (editing) {
       await supabase.from('coins').update(entry).eq('id', editing)
     } else {
