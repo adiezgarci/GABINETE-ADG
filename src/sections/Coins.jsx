@@ -16,6 +16,15 @@ const SEED_COINS = [
   { character: "Alejandro Severo", mint_year: "223 d.C.", weight: 3.2, buy_price: 70, market_value: 70, buy_date: "13/03/2026", buy_place: "Catawiki (subasta online)", obverse: "Retrato juvenil laureado de Alejandro Severo", reverse: "Figura femenina de pie (Pax o Spes)", conservation: "MBC", description: "Denario de plata de Alejandro Severo, último emperador de la dinastía Severa. Gobernante moderado y culto, fue asesinado por sus soldados en el 235 d.C. Su muerte abrió la Crisis del Siglo III." },
 ]
 
+const parseYear = (mintYear) => {
+  if (!mintYear) return 9999
+  const isBC = /a\.?\s*C/i.test(mintYear)
+  const nums = mintYear.match(/\d+/g)
+  if (!nums) return 9999
+  const year = parseInt(nums[0])
+  return isBC ? -year : year
+}
+
 const toRoman = (n) => {
   const v = [1000,900,500,400,100,90,50,40,10,9,5,4,1]
   const s = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I']
@@ -50,12 +59,13 @@ export default function Coins() {
 
   const fetchCoins = async () => {
     setLoading(true)
-    const { data } = await supabase.from('coins').select('*').order('id')
+    const { data } = await supabase.from('coins').select('*')
     if (data) {
-      setCoins(data)
+      const sorted = [...data].sort((a, b) => parseYear(a.mint_year) - parseYear(b.mint_year))
+      setCoins(sorted)
       setSelected(prev => {
-        if (!prev && data.length > 0) return data[0]
-        if (prev) return data.find(c => c.id === prev.id) || null
+        if (!prev && sorted.length > 0) return sorted[0]
+        if (prev) return sorted.find(c => c.id === prev.id) || null
         return null
       })
     }
