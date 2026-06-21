@@ -16,7 +16,7 @@ export default function App() {
         <div className="sidebar-header">
           <div className="monogram">A</div>
           <div className="sidebar-title">
-            Gabinete Adrián
+            Gabinete Hadrianvs
             <span>Colección personal</span>
           </div>
         </div>
