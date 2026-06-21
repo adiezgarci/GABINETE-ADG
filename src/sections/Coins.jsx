@@ -36,7 +36,7 @@ export default function Coins() {
   const [lightbox, setLightbox] = useState(null)
   const [tBuy, setTBuy] = useState(0)
   const [tMkt, setTMkt] = useState(0)
-  const emptyForm = { character: '', mint_year: '', weight: '', buy_price: '', market_value: '', buy_date: '', buy_place: '', obverse: '', reverse: '', conservation: '', description: '', obverseFile: null, reverseFile: null }
+  const emptyForm = { character: '', mint_year: '', weight: '', buy_price: '', market_value: '', buy_date: '', buy_place: '', obverse: '', reverse: '', conservation: '', ric_reference: '', description: '', obverseFile: null, reverseFile: null }
   const [form, setForm] = useState(emptyForm)
 
   useEffect(() => { fetchCoins() }, [])
@@ -90,6 +90,7 @@ export default function Coins() {
       buy_date: form.buy_date,
       buy_place: form.buy_place,
       conservation: form.conservation || null,
+      ric_reference: form.ric_reference || null,
       obverse: form.obverse,
       reverse: form.reverse,
       description: form.description,
@@ -181,6 +182,7 @@ export default function Coins() {
             <div className="detail-row"><span className="detail-key">Período</span><span className="detail-val">{selected.mint_year}</span></div>
             <div className="detail-row"><span className="detail-key">Peso</span><span className="detail-val">{selected.weight ? selected.weight + ' g' : 'Por determinar'}</span></div>
             {selected.conservation && <div className="detail-row"><span className="detail-key">Conservación</span><span className="detail-val">{selected.conservation}</span></div>}
+            {selected.ric_reference && <div className="detail-row"><span className="detail-key">Referencia RIC</span><span className="detail-val">{selected.ric_reference}</span></div>}
             <div className="detail-row"><span className="detail-key">Adquisición</span><span className="detail-val">{selected.buy_date}</span></div>
             <div className="detail-row"><span className="detail-key">Lugar</span><span className="detail-val">{selected.buy_place}</span></div>
             <div className="detail-row"><span className="detail-key">Precio compra</span><span className="detail-val gold">{fmtD(selected.buy_price)} €</span></div>
@@ -215,7 +217,7 @@ export default function Coins() {
                     <td className="gold">{fmtD(c.market_value)} €</td>
                     <td className={pnl >= 0 ? 'green' : 'red'}>{pnl >= 0 ? '+' : ''}{fmtD(pnl)} ({pct}%)</td>
                     <td onClick={e => e.stopPropagation()}>
-                      <button className="btn-icon" onClick={() => { setEditing(c.id); setForm({ ...c, weight: c.weight ?? '', buy_price: String(c.buy_price), market_value: String(c.market_value), conservation: c.conservation ?? '' }); setModal(true) }}>✎</button>
+                      <button className="btn-icon" onClick={() => { setEditing(c.id); setForm({ ...c, weight: c.weight ?? '', buy_price: String(c.buy_price), market_value: String(c.market_value), conservation: c.conservation ?? '', ric_reference: c.ric_reference ?? '' }); setModal(true) }}>✎</button>
                       <button className="btn-icon" onClick={() => remove(c.id)}>✕</button>
                     </td>
                   </tr>
@@ -247,6 +249,7 @@ export default function Coins() {
               <div className="form-group"><label className="form-label">Fecha adquisición</label><input className="form-input" value={form.buy_date} onChange={e => setForm({ ...form, buy_date: e.target.value })} /></div>
               <div className="form-group"><label className="form-label">Lugar de compra</label><input className="form-input" value={form.buy_place} onChange={e => setForm({ ...form, buy_place: e.target.value })} /></div>
               <div className="form-group"><label className="form-label">Conservación</label><input className="form-input" value={form.conservation} onChange={e => setForm({ ...form, conservation: e.target.value })} placeholder="Ej: MBC+" /></div>
+              <div className="form-group"><label className="form-label">Referencia RIC</label><input className="form-input" value={form.ric_reference} onChange={e => setForm({ ...form, ric_reference: e.target.value })} placeholder="Ej: RIC IV 7a" /></div>
               <div className="form-group full"><label className="form-label">Anverso</label><input className="form-input" value={form.obverse} onChange={e => setForm({ ...form, obverse: e.target.value })} /></div>
               <div className="form-group full"><label className="form-label">Reverso</label><input className="form-input" value={form.reverse} onChange={e => setForm({ ...form, reverse: e.target.value })} /></div>
               <div className="form-group full"><label className="form-label">Descripción histórica</label><textarea className="form-textarea" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={5} /></div>
