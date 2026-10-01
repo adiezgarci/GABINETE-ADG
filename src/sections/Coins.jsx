@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient.js'
+import TableroEmperadores from './TableroEmperadores.jsx'
 
 const SEED_COINS = [
   { character: "Alejandro Magno (póstumo)", mint_year: "310–301 a.C.", weight: 4.08, buy_price: 75, market_value: 75, buy_date: "2024", buy_place: "Numismática Mayor 25", obverse: "Heracles con piel de león nemeo", reverse: "Zeus entronizado con águila", conservation: null, description: "Dracma de plata acuñada de forma póstuma en nombre de Alejandro III de Macedonia, el Grande (356–323 a.C.), el conquistador más célebre de la Antigüedad. Alejandro nunca se representó a sí mismo en vida en sus monedas, sino que usó la imagen de Heracles, héroe con el que se identificaba. El reverso muestra a Zeus Olímpico sentado en su trono. Esta pieza fue acuñada durante las Guerras de los Diádocos, el turbulento período en que los generales de Alejandro se disputaron su vasto imperio." },
@@ -159,6 +160,7 @@ export default function Coins() {
         <div className="stat-card"><div className="stat-label">P&L latente</div><div className="stat-value" style={{ color: tPnl >= 0 ? 'var(--green)' : 'var(--red)' }}>{tPnl >= 0 ? '+' : ''}{fmtD(tPnl)} €</div></div>
       </div>
 
+           <TableroEmperadores />
       {selected && (
         <div className="detail-panel">
           <div>
