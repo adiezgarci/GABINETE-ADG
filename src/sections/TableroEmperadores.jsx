@@ -3,7 +3,7 @@ import { useState } from 'react'
 // Desplegable con el tablero "Emperadores que acuñaron denarios".
 // La imagen va en /public/tablero-emperadores.jpg (Vite la sirve desde la raíz).
 const IMG = '/tablero-emperadores.jpg'
-const EN_TABLERO = 16
+const EN_TABLERO = 17
 const TOTAL_TABLERO = 35
 
 export default function TableroEmperadores() {
